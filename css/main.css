@@ -1,0 +1,130 @@
+:root {
+    --bg-color: #1e3a2f;
+    --text-color: #d6c49b;
+    --accent-color: #d6c49b;
+    --hover-color: #e6d3a4;
+    --button-bg: #1e3a2f;
+    --cta-color: #d6c49b;
+    --card-bg: #1e3a2f;
+    --form-bg: #1e3a2f;
+    --border-color: #d6c49b;
+    --button-height: 42px;
+    --button-padding: 0 16px;
+    --button-font-size: 15px;
+    --section-dark: #162a22;
+    --section-light: #f0dbb0;
+    --highlight: #f0c14b;
+    --success: #27ae60;
+    --section-about: #2a4a3d;
+    --section-packages: #f0e6d2;
+    --section-cases: #3d2a2a;
+    --section-reviews: #f0e6d2;
+    --section-products: #2a3d4a;
+    --section-contact: #d6c49b;
+    --section-padding: 80px 0;
+    --mobile-section-padding: 40px 0;
+    --review-text-color: #efe5e5;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Forum', serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    padding-top: 60px;
+}
+
+section {
+    padding: var(--section-padding);
+    max-width: 100%;
+    margin: 0 auto;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease;
+    text-align: center;
+}
+
+section.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.section-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 10%;
+}
+
+h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #070a0c;
+    font-weight: normal;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+}
+
+h2:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--accent-color);
+    border-radius: 3px;
+}
+
+.subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #d8d99f;
+    margin-bottom: 3rem;
+    font-weight: normal;
+    opacity: 0.8;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hidden {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-top: 50px;
+    }
+
+    section {
+        padding: var(--mobile-section-padding);
+    }
+
+    .section-inner {
+        padding: 0 5%;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+    }
+
+    .subtitle {
+        font-size: 1rem;
+    }
+}

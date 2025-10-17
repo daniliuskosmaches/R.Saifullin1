@@ -1,0 +1,427 @@
+/* Selection Section */
+.selection-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.selection-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    background: rgba(214, 196, 155, 0.1);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.stat-item.total {
+    background: var(--accent-color);
+    color: white;
+}
+
+.stat-label {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.stat-value {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--accent-color);
+}
+
+.stat-item.total .stat-value {
+    color: white;
+}
+
+.stat-limit {
+    color: rgba(7, 10, 12, 0.7);
+    font-size: 0.9rem;
+}
+
+.currency {
+    font-weight: 600;
+}
+
+/* Category Sections */
+.category-section {
+    margin: 4rem 0;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(214, 196, 155, 0.3);
+}
+
+.category-header h3 {
+    font-size: 1.8rem;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.category-counter {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Carousel Styles */
+.carousel-container {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+}
+
+.carousel-track {
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.carousel-inner {
+    display: flex;
+    gap: 30px;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    padding: 20px 0;
+}
+
+.carousel-item {
+    flex: 0 0 calc(33.333% - 20px);
+    min-width: calc(33.333% - 20px);
+}
+
+/* Selection Cards - Меньший размер как у пакетов */
+.selection-card {
+    background: rgba(214, 196, 155, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: 1px solid var(--border-color);
+    height: 350px; /* Фиксированная высота как у пакетов */
+    position: relative;
+}
+
+.selection-card:hover {
+    transform: translateY(-10px) scale(1.05); /* Такая же анимация как у пакетов */
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    height: auto;
+    min-height: 450px;
+    z-index: 10;
+}
+
+.selection-card:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: var(--accent-color);
+    z-index: 2;
+}
+
+.card-image {
+    position: relative;
+    height: 180px; /* Меньшая высота изображения */
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.selection-card:hover .card-image img {
+    transform: scale(1.1);
+}
+
+.card-icon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem; /* Меньший размер иконки */
+    background: var(--accent-color);
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.selection-card:hover .card-overlay {
+    opacity: 1;
+}
+
+.select-btn {
+    background: transparent;
+    color: white;
+    border: 1px solid var(--accent-color);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.selection-card:hover .select-btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+}
+
+.select-btn:hover {
+    background: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.select-btn.selected {
+    background: var(--accent-color);
+}
+
+.card-content {
+    padding: 1rem;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #070a0c;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.selection-card:hover .card-title {
+    font-size: 1.4rem;
+}
+
+.card-description {
+    color: #070a0c;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+.selection-card:hover .card-description {
+    font-size: 1rem;
+    opacity: 1;
+}
+
+.card-price {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.selection-card:hover .card-price {
+    font-size: 1.3rem;
+}
+
+/* Carousel Arrows */
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(214, 196, 155, 0.1);
+    border: 1px solid var(--accent-color);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+    font-size: 1.2rem;
+    color: var(--accent-color);
+}
+
+.carousel-arrow:hover {
+    background: var(--accent-color);
+    color: var(--bg-color);
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 5px 15px rgba(214, 196, 155, 0.3);
+}
+
+.carousel-arrow-prev {
+    left: 0;
+}
+
+.carousel-arrow-next {
+    right: 0;
+}
+
+/* Carousel Dots */
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 2rem;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(214, 196, 155, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.carousel-dot:hover {
+    background: var(--accent-color);
+    transform: scale(1.2);
+}
+
+.carousel-dot.active {
+    background: var(--accent-color);
+    transform: scale(1.2);
+}
+
+/* Selected Preview */
+.selected-preview {
+    margin-top: 4rem;
+    padding: 2rem;
+    background: rgba(214, 196, 155, 0.1);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+/* Анимации для появления */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.category-section {
+    animation: slideInUp 0.6s ease-out;
+}
+
+.category-section:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.category-section:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .carousel-item {
+        flex: 0 0 calc(50% - 15px);
+        min-width: calc(50% - 15px);
+    }
+
+    .carousel-container {
+        padding: 0 50px;
+    }
+
+    .carousel-arrow {
+        width: 45px;
+        height: 45px;
+    }
+
+    .selection-stats {
+        gap: 1rem;
+    }
+
+    .stat-item {
+        padding: 0.8rem 1.2rem;
+    }
+
+    .selection-card {
+        height: 320px;
+    }
+
+    .selection-card:hover {
+        min-height: 420px;
+    }
+}
+
+@media (max-width: 768px) {
+    .carousel-item {
+        flex: 0 0 100%;
+        min-width: 100%;
+    }
+
+    .carousel-container {
+        padding: 0 30px;
+    }
+
+    .carousel-arrow {
+        width: 40px;
+        height: 40px;
+        display: none;
+    }
+
+    .category-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .selection-stats {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .stat-item {
+        width: 100%;
+        max-width: 250px;
+        justify-content: space-between;
+    }
+
+    .card-image {
+        height: 150px;
+    }
+
+    .selection-card {
+        height: 300px;
+    }
+
+    .selection-card:hover {
+        min-height: 380px;
+        transform: translateY(-5px) scale(1.02);
+    }
+}
