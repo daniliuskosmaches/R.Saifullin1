@@ -1,11 +1,7 @@
-import dotenv from 'dotenv';
+[file name]: build.js
+[file content begin]
 import express from 'express';
 import path from 'path';
-import helmet from 'helmet';
-import cors from 'cors';
-import rateLimit from 'express-rate-limit';
-import fs from 'fs';
-import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 
 // ES modules fix for __dirname
@@ -13,102 +9,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Конфигурация
-dotenv.config();
 const PORT = process.env.PORT || 3000;
-const PRICE_SECRET = process.env.PRICE_SECRET || crypto.randomBytes(32).toString('hex');
 
 // Инициализация приложения
 const app = express();
 
 // Мидлвары
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: [
-        "'self'",
-        "'unsafe-inline'",
-        "https://cdnjs.cloudflare.com"
-      ],
-      styleSrc: [
-        "'self'",
-        "'unsafe-inline'",
-        "https://cdnjs.cloudflare.com"
-      ],
-      imgSrc: [
-        "'self'",
-        "data:",
-        "https:",
-        "blob:"
-      ],
-      connectSrc: [
-        "'self'",
-        "https://r-saifullin-8.onrender.com"
-      ],
-      fontSrc: [
-        "'self'",
-        "https://cdnjs.cloudflare.com",
-        "data:"
-      ],
-      mediaSrc: [
-        "'self'",
-        "https:",
-        "blob:"
-      ],
-      objectSrc: ["'none'"],
-      frameSrc: ["'none'"],
-      formAction: ["'self'"]
-    }
-  },
-  crossOriginEmbedderPolicy: false,
-  crossOriginResourcePolicy: { policy: "cross-origin" }
-}));
-
-app.use(cors());
 app.use(express.json({ limit: '10kb' }));
+app.use(express.urlencoded({ extended: true }));
 
-// Лимитер запросов для API
-const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: 'Too many requests, please try again later'
-});
-app.use('/api/', apiLimiter);
-
-// Правильная настройка статических файлов
-app.use(express.static(__dirname, {
-  setHeaders: (res, filePath) => {
-    const ext = path.extname(filePath).toLowerCase();
-    
-    const mimeTypes = {
-      '.html': 'text/html; charset=UTF-8',
-      '.css': 'text/css; charset=UTF-8',
-      '.js': 'application/javascript; charset=UTF-8',
-      '.png': 'image/png',
-      '.jpg': 'image/jpeg',
-      '.jpeg': 'image/jpeg',
-      '.gif': 'image/gif',
-      '.ico': 'image/x-icon',
-      '.mp4': 'video/mp4',
-      '.webm': 'video/webm',
-      '.svg': 'image/svg+xml',
-      '.woff': 'font/woff',
-      '.woff2': 'font/woff2',
-      '.ttf': 'font/ttf',
-      '.eot': 'application/vnd.ms-fontobject'
-    };
-
-    if (mimeTypes[ext]) {
-      res.setHeader('Content-Type', mimeTypes[ext]);
-      if (ext !== '.js') {
-        res.setHeader('X-Content-Type-Options', 'nosniff');
-      }
-    } else {
-      res.status(404).end();
-      return;
-    }
-  }
-}));
+// Статические файлы
+app.use(express.static(__dirname));
 
 // Блокировка доступа к серверным файлам
 app.get([
@@ -127,47 +38,6 @@ app.get([
   console.log('Blocked access to server file:', req.path);
   res.status(404).send('Not found');
 });
-
-// Функции для работы с ценами
-function createPriceSignature(productId, price, type = 'character') {
-  const data = `${type}:${productId}:${price}:${Date.now()}`;
-  const signature = crypto.createHmac('sha256', PRICE_SECRET)
-    .update(data)
-    .digest('hex');
-  
-  return { price, signature, timestamp: Date.now() };
-}
-
-function verifyPriceSignature(productId, price, signature, timestamp, type = 'character') {
-  const data = `${type}:${productId}:${price}:${timestamp}`;
-  const expectedSignature = crypto.createHmac('sha256', PRICE_SECRET)
-    .update(data)
-    .digest('hex');
-  
-  return expectedSignature === signature && 
-         (Date.now() - timestamp) < 300000;
-}
-
-function getRealPrice(productId, type = 'character') {
-  let data;
-  switch (type) {
-    case 'character':
-      data = charactersData.find(c => c.id === productId);
-      break;
-    case 'show':
-      data = showsData.find(s => s.id === productId);
-      break;
-    case 'master':
-      data = masterClassesData.find(m => m.id === productId);
-      break;
-    case 'additional':
-      data = additionalServices.find(a => a.id === productId);
-      break;
-    default:
-      return 0;
-  }
-  return data ? data.price : 0;
-}
 
 // Данные для фронтенда
 const charactersData = [
@@ -204,42 +74,22 @@ const additionalServices = [
   { id: 3, name: "Пиньята", price: 1500 }
 ];
 
-// API: Получение данных для фронтенда с подписанными ценами
+// API: Получение данных для фронтенда
 app.get('/api/init-data', (req, res) => {
   try {
-    const signedCharacters = charactersData.map(char => ({
-      ...char,
-      signedPrice: createPriceSignature(char.id, char.price, 'character')
-    }));
-
-    const signedShows = showsData.map(show => ({
-      ...show,
-      signedPrice: createPriceSignature(show.id, show.price, 'show')
-    }));
-
-    const signedMasterClasses = masterClassesData.map(master => ({
-      ...master,
-      signedPrice: createPriceSignature(master.id, master.price, 'master')
-    }));
-
-    const signedAdditionalServices = additionalServices.map(service => ({
-      ...service,
-      signedPrice: createPriceSignature(service.id, service.price, 'additional')
-    }));
-
     res.json({
-      characters: signedCharacters,
-      shows: signedShows,
-      masterClasses: signedMasterClasses,
-      additionalServices: signedAdditionalServices
+      characters: charactersData,
+      shows: showsData,
+      masterClasses: masterClassesData,
+      additionalServices: additionalServices
     });
   } catch (error) {
-    console.error('Error generating signed data:', error);
+    console.error('Error generating data:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
 
-// API: Создание заявки (упрощенная версия без email)
+// API: Создание заявки (упрощенная версия)
 app.post('/api/bookings', async (req, res) => {
   try {
     const { 
@@ -256,106 +106,26 @@ app.post('/api/bookings', async (req, res) => {
       total 
     } = req.body;
 
-    // Валидация обязательных полей
+    // Базовая валидация
     if (!name || !phone || !eventDate || !childBirthday || !packageType) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Валидация email
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return res.status(400).json({ error: 'Invalid email format' });
-    }
-
-    // Валидация телефона
-    if (!/^\+7\s\(\d{3}\)\s\d{3}-\d{2}-\d{2}$/.test(phone)) {
-      return res.status(400).json({ error: 'Invalid phone format' });
-    }
-
-    // Валидация дат
-    const eventDateObj = new Date(eventDate);
-    const childBirthdayObj = new Date(childBirthday);
-    const now = new Date();
-    
-    if (eventDateObj <= now) {
-      return res.status(400).json({ error: 'Event date must be in the future' });
-    }
-
-    if (childBirthdayObj >= now) {
-      return res.status(400).json({ error: 'Child birthday must be in the past' });
-    }
-
-    // Проверка цен
-    for (const char of characters) {
-      if (!verifyPriceSignature(char.id, char.price, char.signature, char.timestamp, 'character')) {
-        return res.status(400).json({ error: 'Invalid character price detected' });
-      }
-    }
-
-    for (const show of shows) {
-      if (!verifyPriceSignature(show.id, show.price, show.signature, show.timestamp, 'show')) {
-        return res.status(400).json({ error: 'Invalid show price detected' });
-      }
-    }
-
-    for (const master of masterClasses) {
-      if (!verifyPriceSignature(master.id, master.price, master.signature, master.timestamp, 'master')) {
-        return res.status(400).json({ error: 'Invalid master class price detected' });
-      }
-    }
-
-    for (const service of additionalServices) {
-      if (!verifyPriceSignature(service.id, service.price, service.signature, service.timestamp, 'additional')) {
-        return res.status(400).json({ error: 'Invalid additional service price detected' });
-      }
-    }
-
-    // Пересчет общей суммы на сервере
-    let calculatedTotal = 0;
-    
-    const packagePrices = {
-      basic: 10000,
-      standard: 35000,
-      premium: 55000,
-      custom: 0
-    };
-    
-    calculatedTotal += packagePrices[packageType] || 0;
-
-    characters.forEach(char => calculatedTotal += parseFloat(char.price));
-    shows.forEach(show => calculatedTotal += parseFloat(show.price));
-    masterClasses.forEach(master => calculatedTotal += parseFloat(master.price));
-    additionalServices.forEach(service => calculatedTotal += parseFloat(service.price));
-
-    // Проверка общей суммы
-    if (Math.abs(parseFloat(total) - calculatedTotal) > 0.01) {
-      return res.status(400).json({ 
-        error: 'Total price mismatch', 
-        calculatedTotal,
-        receivedTotal: total 
-      });
-    }
-
-    // Создание заявки (без сохранения в файл)
+    // Создание заявки
     const booking = {
-      id: crypto.randomUUID(),
+      id: Date.now().toString(),
       name,
       phone,
       email,
-      eventDate: eventDateObj,
-      childBirthday: childBirthdayObj,
+      eventDate,
+      childBirthday,
       packageType,
-      characters,
-      shows,
-      masterClasses,
-      additionalServices,
-      totalPrice: calculatedTotal,
-      createdAt: new Date(),
-      ip: req.ip
+      totalPrice: total,
+      createdAt: new Date().toISOString()
     };
 
     console.log(`New booking created: ${booking.id} for ${booking.name}`);
 
-    // Только логирование, без отправки email
     res.status(201).json({ 
       success: true, 
       booking: {
@@ -371,20 +141,6 @@ app.post('/api/bookings', async (req, res) => {
   }
 });
 
-// API: Получение списка заявок (упрощенная версия)
-app.get('/api/bookings', (req, res) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || authHeader !== `Bearer ${process.env.ADMIN_TOKEN}`) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-
-  res.json({ 
-    success: true,
-    message: 'Admin access granted - booking storage disabled in build version',
-    bookings: []
-  });
-});
-
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({ 
@@ -392,15 +148,6 @@ app.get('/api/health', (req, res) => {
     server: 'build.js',
     timestamp: new Date().toISOString()
   });
-});
-
-// Обработка ошибок
-process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error);
-});
-
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
 });
 
 // Обслуживание фронтенда - ДОЛЖНО БЫТЬ ПОСЛЕДНИМ
@@ -414,10 +161,4 @@ app.listen(PORT, () => {
   console.log(`Open in browser: http://localhost:${PORT}`);
   console.log('Server type: BUILD (simplified version)');
 });
-
-// Graceful shutdown
-process.on('SIGINT', () => {
-  console.log('Build server shutting down...');
-  process.exit();
-});
-
+[file content end]
