@@ -1,10 +1,16 @@
 {
-  "name": "R.Saifullin",
+  "name": "holiday-website",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node build.js",
+    "start": "npx serve build -l 3000"
   },
-  "private": true
+  "dependencies": {
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT"
 }
