@@ -1,5 +1,6 @@
+
 :root {
-    --bg-color: #1e3a2f;
+    --bg-color: #1e3a2f; /* Темно-зеленый как основной фон */
     --text-color: #d6c49b;
     --accent-color: #d6c49b;
     --hover-color: #e6d3a4;
@@ -24,6 +25,7 @@
     --section-padding: 80px 0;
     --mobile-section-padding: 40px 0;
     --review-text-color: #efe5e5;
+    --divider-color: rgba(214, 196, 155, 0.3); /* Цвет разделительных линий */
 }
 
 * {
@@ -39,7 +41,7 @@ html {
 
 body {
     font-family: 'Forum', serif;
-    background-color: var(--bg-color);
+    background-color: var(--bg-color); /* Темно-зеленый фон для всего сайта */
     color: var(--text-color);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
@@ -47,6 +49,7 @@ body {
     padding-top: 60px;
 }
 
+/* Стили для секций с разделительными линиями */
 section {
     padding: var(--section-padding);
     max-width: 100%;
@@ -55,6 +58,29 @@ section {
     transform: translateY(30px);
     transition: all 0.6s ease;
     text-align: center;
+    position: relative;
+}
+
+/* Добавляем разделительные линии между секциями */
+section:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(
+            90deg,
+            transparent 0%,
+            var(--divider-color) 20%,
+            var(--divider-color) 80%,
+            transparent 100%
+    );
+}
+
+/* Убираем линию у последней секции */
+section:last-child::after {
+    display: none;
 }
 
 section.show {
@@ -68,11 +94,51 @@ section.show {
     padding: 0 10%;
 }
 
+/* Индивидуальные цвета фона для определенных секций */
+#hero {
+    background: var(--bg-color); /* Оставляем основной фон */
+}
+
+#about {
+    background: var(--section-about); /* Специальный цвет для about */
+}
+
+#packages {
+    background: var(--section-packages); /* Специальный цвет для packages */
+    color: var(--bg-color);
+}
+
+#cases {
+    background: var(--section-cases); /* Специальный цвет для cases */
+    color: #f8f4e9;
+}
+
+#reviews {
+    background: var(--section-reviews); /* Специальный цвет для reviews */
+    color: var(--bg-color);
+}
+
+#products {
+    background: var(--section-products); /* Специальный цвет для products */
+    color: #f8f4e9;
+}
+
+#contact {
+    background: var(--section-contact); /* Специальный цвет для contact */
+    color: var(--bg-color);
+}
+
+/* Для секций без специального цвета используем основной фон */
+#selection,
+#consultForm {
+    background: var(--bg-color);
+}
+
 h2 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #070a0c;
+    color: var(--text-color);
     font-weight: normal;
     letter-spacing: 2px;
     position: relative;
@@ -94,7 +160,7 @@ h2:after {
 .subtitle {
     text-align: center;
     font-size: 1.2rem;
-    color: #d8d99f;
+    color: var(--text-color);
     margin-bottom: 3rem;
     font-weight: normal;
     opacity: 0.8;
@@ -107,6 +173,13 @@ h2:after {
     display: none !important;
 }
 
+/* Дополнительные стили для улучшения читаемости на темном фоне */
+.hero-content h1,
+.hero-content p {
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+/* Адаптивность */
 @media (max-width: 768px) {
     body {
         padding-top: 50px;
@@ -114,6 +187,11 @@ h2:after {
 
     section {
         padding: var(--mobile-section-padding);
+    }
+
+    section:not(:last-child)::after {
+        left: 5%;
+        right: 5%;
     }
 
     .section-inner {
@@ -126,5 +204,12 @@ h2:after {
 
     .subtitle {
         font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    section:not(:last-child)::after {
+        left: 2%;
+        right: 2%;
     }
 }
