@@ -1,5 +1,3 @@
-[file name]: build.js
-[file content begin]
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
