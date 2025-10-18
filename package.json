@@ -1,16 +1,25 @@
 {
-  "name": "holiday-website",
+  "name": "child-party",
   "version": "1.0.0",
   "type": "module",
+  "description": "Детские праздники - фронтенд приложение",
+  "main": "build.js",
   "scripts": {
-    "build": "node build.js",
-    "start": "npx serve build -l 3000"
+    "start": "node build.js",
+    "dev": "node build.js",
+    "build": "echo 'Build completed'"
   },
   "dependencies": {
-    "serve": "^14.2.1"
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "helmet": "^7.1.0",
+    "cors": "^2.8.5",
+    "express-rate-limit": "^7.1.5"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=18.0.0"
   },
+  "keywords": ["child", "party", "frontend"],
+  "author": "Your Name",
   "license": "MIT"
 }
