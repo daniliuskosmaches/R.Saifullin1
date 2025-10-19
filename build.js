@@ -389,7 +389,7 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Обработка ошибок
+// Обработка ошибок для пидорасов нормальные сука разрабы разрабатывают очко и ловят пиздл.дей от СЕО
 process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
 });
