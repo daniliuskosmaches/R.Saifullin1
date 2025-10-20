@@ -1,3 +1,5 @@
+// build.js
+import 'dotenv/config'; // автоматически вызывает config()
 
 require('dotenv').config();
 const express = require('express');
